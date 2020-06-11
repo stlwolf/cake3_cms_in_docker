@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  composer:
+    image: composer
+    volumes:
+      - ./:/app:cached
+    working_dir: /app
+
+  mysql:
+    image: mysql:5.7.27
+    environment:
+      MYSQL_PASSWORD: AngelF00dC4k3~
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: cakephp
+    env_file:
+      - ./docker/containers/common.env
+    networks:
+      - cake_cms
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+      - ./docker/containers/mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./docker/containers/mysql/init:/docker-entrypoint-initdb.d
+
+
+  phpfpm:
+    build: ./docker/containers/php-fpm
+    container_name: cake-server
+    depends_on:
+      - mysql
+    env_file:
+      - ./docker/containers/common.env
+    networks:
+      - cake_cms
+    ports:
+      - "8765:8765"
+    volumes:
+      - ./:/var/www/cake_cms
+    working_dir: /var/www/cake_cms
+
+networks:
+  cake_cms:
+
+volumes:
+  mysql_volume:
+    driver: local
