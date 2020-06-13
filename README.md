@@ -8,7 +8,7 @@ CakePHP3系ドキュメントにあるCMSチュートリアルをDocker上で試
 macOS Catalina 10.15.4
 
 # Requirements
-Docker version 19.03.1+
+Docker version 19.03.1+  
 docker-compose version 1.24.1+
 
 # Usage
